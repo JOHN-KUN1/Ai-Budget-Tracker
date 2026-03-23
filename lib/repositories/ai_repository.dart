@@ -8,10 +8,10 @@ class AiRepository {
     }
   );
 
-  Future<String> getInsight() async {
+  Future<String> getInsight(String transactionDetails) async {
     try {
-      final insight = apiService.getInsights();
-      return '';
+      final insight = await apiService.getInsights(transactionDetails);
+      return insight;
     } catch (e) {
       throw Exception(e.toString());
     }

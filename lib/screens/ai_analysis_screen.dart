@@ -1,12 +1,11 @@
-import 'package:budget_tracker/view_models/api_service_provider.dart';
+import 'package:budget_tracker/view_models/repository_provider.dart';
+import 'package:doc_text_extractor/doc_text_extractor.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:developer';
-import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:open_file_manager/open_file_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class AiAnalysisScreen extends ConsumerStatefulWidget {
@@ -17,24 +16,14 @@ class AiAnalysisScreen extends ConsumerStatefulWidget {
 }
 
 class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen> {
-  FilePickerResult? file;
-  String l = '';
+  String? filePath;
+  String analysis = '';
 
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration.zero,(){
-      ref.read(apiServiceProvider).getInsights();
-    });
-  }
-
-  Future<void> getInsights(FilePickerResult file) async {
-    await Future.delayed(Duration(seconds: 2),(){
-      // never call set state here or risk ending up an infinite loop
-      log('sratr');
-        l = 'hello';
-    });
-    log('done');
+  Future<void> getInsights(String file) async {
+    final extractor = TextExtractor();
+    final extractedText = await extractor.extractText(file,isUrl: false);
+    final aiAnalysis = await ref.read(aiRepositoryProvider).getInsight(extractedText.text);
+    analysis = aiAnalysis;
   }
 
   @override
@@ -50,7 +39,7 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen> {
           ),
         ),
       ),
-      body: file == null
+      body: filePath == null
           ? Center(
               child: Column(
                 mainAxisAlignment: .center,
@@ -94,9 +83,11 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen> {
                           await Permission.storage.request().isGranted) {
                         FilePickerResult? result = await FilePicker.platform
                             .pickFiles();
-                        setState(() {
-                          file = result!;
-                        });
+                        if (result != null) {
+                          setState(() {
+                            filePath = result.files.single.path!;
+                          });
+                        }
                       }
                     },
                     icon: const Icon(
@@ -120,7 +111,7 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen> {
               ),
             )
           : FutureBuilder(
-              future: getInsights(file!),
+              future: getInsights(filePath!),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
@@ -131,8 +122,14 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen> {
                     child: Text(snapshot.error.toString()),
                   );
                 } else {
-                  return Center(
-                    child: Text('l'),
+                  return Markdown(
+                    data: analysis,
+                    styleSheet: MarkdownStyleSheet(
+                      h1: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold),
+                      h2: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
+                      p: GoogleFonts.poppins(fontSize: 16),
+                      strong: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+                    ),
                   );
                 }
               },
