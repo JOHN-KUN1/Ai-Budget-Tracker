@@ -60,7 +60,7 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen> {
                                 style: GoogleFonts.poppins(),
                               ),
                               content: Text(
-                                'Storage permission is required to perform Ai analysis',
+                                'Storage permission is required to perform AI analysis',
                                 style: GoogleFonts.poppins(),
                               ),
                               actions: [
@@ -114,7 +114,7 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen> {
               future: getInsights(filePath!),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else if (snapshot.hasError) {

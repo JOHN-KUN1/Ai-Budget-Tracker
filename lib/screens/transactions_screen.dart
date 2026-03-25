@@ -2,7 +2,6 @@ import 'package:budget_tracker/models/transaction_model.dart';
 import 'package:budget_tracker/view_models/transaction_provider.dart';
 import 'package:budget_tracker/widgets/transaction_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod/riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -123,10 +122,10 @@ class _AddTransactionBottomSheetState
 
   bool error = false;
   bool amountError = false;
+  bool titleError = false;
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _titleController.dispose();
     _amountController.dispose();
     _notesController.dispose();
@@ -162,6 +161,12 @@ class _AddTransactionBottomSheetState
                       _amountController.text.trim().isEmpty) {
                     setState(() {
                       error = true;
+                    });
+                    return;
+                  }
+                  if (!isAlpha(_titleController.text.trim())){
+                    setState(() {
+                      titleError = true;
                     });
                     return;
                   }
@@ -287,7 +292,7 @@ class _AddTransactionBottomSheetState
                     controller: _titleController,
                     decoration: InputDecoration(
                       labelText: 'Title',
-                      errorText: error ? 'value cannot be empty' : null,
+                      errorText: titleError ? 'title must only contain alphabets' : error ? 'value cannot be empty' : null,
                     ),
                   ),
                   TextField(

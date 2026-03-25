@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:dio/dio.dart';
 
@@ -40,4 +38,6 @@ class ApiService {
       throw Exception(e.toString());
     }
   }
+
+
 }

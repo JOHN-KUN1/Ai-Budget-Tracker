@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:budget_tracker/widgets/transaction_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:percent_indicator/flutter_percent_indicator.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -23,6 +24,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final income = ref.watch(incomeProvider);
     final expense = ref.watch(expenseProvider);
     final balance = ref.watch(balanceProvider);
+    final percent = (expense / income).toStringAsFixed(1);
+    final doublePercent = double.tryParse(percent);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -180,8 +183,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       const SizedBox(
                         height: 10,
                       ),
-                      const LinearProgressIndicator(
-                        color: Colors.blue,
+                      LinearPercentIndicator(
+                        barRadius: const Radius.circular(20),
+                        backgroundColor: Colors.grey,
+                        progressColor: expense >= income
+                            ? Colors.red
+                            : Colors.blue,
+                        lineHeight: 10.0,
+                        percent: expense >= income
+                            ? 1.0
+                            : income == 0
+                            ? 0.0
+                            : doublePercent!,
                       ),
                       const SizedBox(
                         height: 10,
@@ -190,7 +203,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         mainAxisAlignment: .start,
                         children: [
                           Text(
-                            '68% of income saved',
+                            '${(expense >= income) ? '100' : (doublePercent! * 100).floor()}% of income used',
                             style: GoogleFonts.poppins(
                               color: Colors.grey,
                             ),
@@ -323,34 +336,41 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         fontSize: 16,
                       ),
                     ),
-                    Text(
-                      'See All',
-                      style: GoogleFonts.poppins(
-                        color: Colors.blue,
-                        fontSize: 16,
+                    TextButton(
+                      onPressed: () {
+
+                      },
+                      child: Text(
+                        'See All',
+                        style: GoogleFonts.poppins(
+                          color: Colors.blue,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 5,),
-              Expanded(
-              child: ListView.builder(
-                itemCount: transactions.length,
-                itemBuilder: (context, index) {
-                  final transaction = transactions[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 15,
-                      vertical: 5,
-                    ),
-                    child: TransactionWidget(
-                      transactionModel: transaction,
-                    ),
-                  );
-                },
+              const SizedBox(
+                height: 5,
               ),
-            ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: transactions.length,
+                  itemBuilder: (context, index) {
+                    final transaction = transactions[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 5,
+                      ),
+                      child: TransactionWidget(
+                        transactionModel: transaction,
+                      ),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),

@@ -9,6 +9,13 @@ class TransactionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<Category, IconData> categoryIcons = {
+      Category.salary: Icons.monetization_on,
+      Category.investment: Icons.trending_up,
+      Category.gift: Icons.card_giftcard,
+      Category.refund: Icons.restart_alt,
+      Category.other: Icons.category,
+    };
     return Container(
       padding: EdgeInsets.all(15),
       width: double.infinity,
@@ -20,10 +27,17 @@ class TransactionWidget extends StatelessWidget {
         mainAxisAlignment: .spaceBetween,
         children: [
           CircleAvatar(
-            backgroundColor: transactionModel.transactionType.name.toLowerCase() == 'income' ? Colors.green[200] : Colors.red[200],
+            backgroundColor:
+                transactionModel.transactionType.name.toLowerCase() == 'income'
+                ? Colors.green[200]
+                : Colors.red[200],
             child: Icon(
-              transactionModel.transactionType.name.toLowerCase() == 'income' ? Icons.trending_up : Icons.trending_down,
-              color: transactionModel.transactionType.name.toLowerCase() == 'income' ? Colors.green : Colors.red,
+              categoryIcons[transactionModel.category],
+              color:
+                  transactionModel.transactionType.name.toLowerCase() ==
+                      'income'
+                  ? Colors.green
+                  : Colors.red,
             ),
           ),
           // const SizedBox(
@@ -63,7 +77,11 @@ class TransactionWidget extends StatelessWidget {
           Text(
             '${transactionModel.transactionType == TransactionType.income ? '+\$' : '-\$'}${transactionModel.amount}',
             style: GoogleFonts.poppins(
-              color: transactionModel.transactionType.name.toLowerCase() == 'income' ? Colors.greenAccent : Colors.redAccent,
+              color:
+                  transactionModel.transactionType.name.toLowerCase() ==
+                      'income'
+                  ? Colors.greenAccent
+                  : Colors.redAccent,
               fontSize: 18,
               fontWeight: FontWeight.w800,
             ),
