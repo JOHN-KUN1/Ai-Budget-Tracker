@@ -22,7 +22,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ? false
         : true;
     return SettingsList(
-      contentPadding: EdgeInsets.symmetric(horizontal: 7),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 7),
       platform: DevicePlatform.android,
       lightTheme: const SettingsThemeData(
         settingsListBackground: Colors.white,
@@ -59,7 +59,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           tiles: [
             SettingsTile(
-              leading: Icon(Icons.money),
+              leading: const Icon(Icons.money),
               title: Text(
                 'Currency',
                 style: GoogleFonts.poppins(
@@ -103,7 +103,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           tiles: [
             SettingsTile(
-              leading: Icon(Icons.phone_android),
+              leading: const Icon(Icons.phone_android),
               title: Text(
                 'Version',
                 style: GoogleFonts.poppins(
