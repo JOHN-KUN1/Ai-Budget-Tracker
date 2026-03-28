@@ -27,10 +27,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       lightTheme: const SettingsThemeData(
         settingsListBackground: Colors.white,
       ),
-      // darkTheme: const SettingsThemeData(
-      //   settingsListBackground: Colors.black,
-      //   settingsSectionBackground: Color.fromARGB(255, 52, 51, 51),
-      // ),
       sections: [
         SettingsSection(
           title: Text(
