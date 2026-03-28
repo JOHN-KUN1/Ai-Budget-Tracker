@@ -316,6 +316,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ),
                         Expanded(
                           child: LinearPercentIndicator(
+                            barRadius: const Radius.circular(20),
                             percent: 1.0,
                             progressColor: Colors.red,
                           ),
