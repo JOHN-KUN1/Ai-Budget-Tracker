@@ -223,7 +223,7 @@ class _AddTransactionBottomSheetState
                 ),
               ),
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_titleController.text.trim().isEmpty ||
                       _amountController.text.trim().isEmpty) {
                     setState(() {
@@ -245,7 +245,7 @@ class _AddTransactionBottomSheetState
                     return;
                   }
                   widget.id != null
-                      ? ref
+                      ? await ref
                             .read(transactionProvider.notifier)
                             .updateTransaction(
                               widget.id!,
@@ -257,7 +257,7 @@ class _AddTransactionBottomSheetState
                               categoryValue,
                               transactionType,
                             )
-                      : ref
+                      : await ref
                             .read(transactionProvider.notifier)
                             .addTransactions(
                               transactionType: transactionType,
